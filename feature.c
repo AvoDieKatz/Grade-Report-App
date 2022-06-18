@@ -16,15 +16,19 @@ char search_term[256];
 void displayStudents() {
 
     if (size != 0) {
-        printf("\n");
-        printf("----------------------Student list----------------------\n");
-        printf("\t%-10s| %-10s| %10s\n", "ID", "Name", "Grade");
+        
+        cyan();
+        printf("\n----------------------Student list----------------------\n");
+        printf("%4s|%10s|%6s\n", "ID", "Name", "Grade");
+        reset();
         for(int i = 0; i < size; i++) {
-          printf("\t%-10d| %-10s| %10.2f\n", id[i], name[i], grades[i]);
+          printf("%4d|%-10s|%6.2f\n", id[i], name[i], grades[i]);
         }
         printf("\n");
     } else {
+        yellow();
         printf("\n\n----------There are currently no student in the list----------\n\n");
+        reset();
     }
 
 }
@@ -36,22 +40,24 @@ void addStudent() {
     float new_grade = 0.0;
     int scf_rtn = 0;
 
-    for (;;) {
+    for (;;) {      //equivalent to while(true)
         printf("\nInput student ID: \n");
         scf_rtn = scanf("%d", &new_id);
     
         // Validate ID input
         int validateInt = validateIdInput(new_id, scf_rtn);
         if (validateInt == 0) {
-          continue;
+            continue;
         } else if (validateInt == -1) {
-          printf("Something wrong when trying to add a new student.\n");
+            printf("Something wrong when trying to add a new student.\n");
         }
 
         // Check ID duplication
         int isDuplicate = isIdDuplicated(new_id);
         if (isDuplicate == 1) {
-        printf("Duplicate student ID, try again.\n");
+            red();
+            printf("Duplicate student ID, try again.\n");
+            reset();
             continue;
         } else if (isDuplicate == 0) {
             break;
@@ -65,7 +71,9 @@ void addStudent() {
         if(validateVal == 0)  {
             break;
         } else if (validateVal == REG_NOMATCH) {
+            red();
             printf("Invalid name, try again (Correct format is: FirstName LastName)");
+            reset();
             continue;
         }
     }
@@ -96,9 +104,10 @@ void findHighLow() {
     int imin = 0;
     
     if(size !=0) {
-        printf("\n");
-        printf("----------Students with HIGHEST grade----------\n");
+        cyan();
+        printf("\n----------Students with HIGHEST grade----------\n");
         printf("\t%-10s| %10s| %10s\n", "ID", "Name", "Grade");
+        reset();
         // Find MAX grade
         for(int i=0; i<size; i++) {
             if(grades[imax] <= grades[i]) {
@@ -112,8 +121,10 @@ void findHighLow() {
             }
         }
 
-        printf("----------Students with LOWEST grade----------\n");
+        cyan();
+        printf("\n----------Students with LOWEST grade----------\n");
         printf("\t%-10s| %10s| %10s\n", "ID", "Name", "Grade");
+        reset();
         // Find MIN grade
         for(int i=0; i<size; i++) {
             if(grades[imin] >= grades[i]) {
@@ -127,7 +138,9 @@ void findHighLow() {
             }
         }
     } else {
+        yellow();
         printf("\n\n----------There are currently no student in the list----------\n\n");
+        reset();
     }    
     
 }
@@ -144,10 +157,19 @@ void searchById(int input) {
             }
         }
     } else if (found == 0) {
-        printf("No match with ID: %d\n", input);
+        red();
+        printf("No match");
+        reset();
+        printf("with ID: %d\n", input);
+        
     }
     if (count > 0) {
-        printf("You found %d matches with id: %d\n", count, input);
+        printf("You found");
+        green();
+        printf(" %d ", count);
+        reset();
+        printf("matches with ID:");
+        printf(" %d\n ", input);
     }
     return;
 
@@ -163,9 +185,17 @@ void searchByName(const char *input) {
         }
     }
     if (count == 0) {
-        printf("No match with name: %s\n", input);
+        red();
+        printf("No match");
+        reset();
+        printf("with name: %s\n", input);
     } else if (count > 0) {
-        printf("You found %d matches with name: %s\n", count, input);
+        printf("You found");
+        green();
+        printf(" %d ", count);
+        reset();
+        printf("matches with name:");
+        printf(" %s\n ", input);
     }
     return;
     
@@ -175,7 +205,9 @@ void search() {
 
     printf("Search: ");
     scanf("%[^\n]%*c", search_term);
+    cyan();
     printf("\t%-10s| %-10s| %5s\n", "ID", "Name", "Grade");
+    reset();
     int isInt = isInteger(search_term);
     if (isInt == 0) {
         int intInput = atoi(search_term);
@@ -197,6 +229,7 @@ void exportCsv() {
       fprintf(fpt, "%d, %0.2f\n", id[i], grades[i]);
     }
     fclose(fpt);
+    green();
     printf("\nA CSV file has been exported in the same directory\n");
-    
+    reset();
 }

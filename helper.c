@@ -31,11 +31,15 @@ int isIdDuplicated(int input) {
 int validateIdInput(int input, int scf_rtn) {
 
   if (scf_rtn == 0) {
+    red();
     printf("Invalid input. (Not a number)\n");
+    reset();
     emptyBuffer();
     return 0;
   } else if (input < 1) {
+    red();
     printf("Invalid input. (Out of range)\n");
+    reset();
     emptyBuffer();
     return 0;
   } else {
@@ -49,11 +53,15 @@ int validateIdInput(int input, int scf_rtn) {
 int validateFloatInput(float input, int scf_rtn) {
 
   if (scf_rtn == 0) {
+    red();
     printf("Not a valid grade (Number only)\n");
+    reset();
     emptyBuffer();
     return 0;
   } else if (input < 0.0 || input > 10.0) {
+    red();
     printf("Not a valid grade (Out of range)\n");
+    reset();
     emptyBuffer();
     return 0;
   } else {
@@ -86,4 +94,28 @@ int isInteger(const char *input) {
     regfree(&regex);
     return value;
     
+}
+
+void red() {
+  printf("\033[0;31m");
+}
+
+void green() {
+  printf("\033[0;32m");
+}
+
+void cyan() {
+  printf("\033[0;36m");
+}
+
+void purple() {
+  printf("\033[0;35m");
+}
+
+void yellow() {
+  printf("\033[0;33m");
+}
+
+void reset() {
+  printf("\033[0m");
 }

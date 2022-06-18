@@ -13,7 +13,9 @@ int main() {
   int scf_rtn = 0; //value to check if "scanf" return correct type
 
   do {
+    purple();
     printf("\n----------------------Grade Management App----------------------\n");
+    reset();
     printf("1. Show all.\n");
     printf("2. Add new student.\n");
     printf("3. Best and Worst student.\n");
@@ -26,10 +28,14 @@ int main() {
     emptyBuffer();
 
     if (scf_rtn == 0) {
+      red();
       printf("Invalid choice. (Not a number)\n");
+      reset();
       continue;
     } else if (choice < 0 || choice > 5) {
+      red();
       printf("Invalid choice. (Out of range)\n");
+      reset();
       continue;
     }
 
