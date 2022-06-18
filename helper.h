@@ -9,6 +9,5 @@ extern void red();
 extern void green();
 extern void cyan();
 extern void purple();
-extern void blue();
 extern void yellow();
 extern void reset();
