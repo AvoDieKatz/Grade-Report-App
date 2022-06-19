@@ -18,11 +18,11 @@ void displayStudents() {
     if (size != 0) {
         
         cyan();
-        printf("\n----------------------Student list----------------------\n");
-        printf("%4s|%10s|%6s\n", "ID", "Name", "Grade");
+        printf("\n------------------------Student list------------------------\n");
+        printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
         reset();
         for(int i = 0; i < size; i++) {
-          printf("%4d|%-10s|%6.2f\n", id[i], name[i], grades[i]);
+          printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
         }
         printf("\n");
     } else {
@@ -100,41 +100,41 @@ void addStudent() {
 
 void findHighLow() {
 
-    int imax = 0;
-    int imin = 0;
+    int i_max = 0;
+    int i_min = 0;
     
     if(size !=0) {
         cyan();
-        printf("\n----------Students with HIGHEST grade----------\n");
-        printf("\t%-10s| %10s| %10s\n", "ID", "Name", "Grade");
+        printf("\n-----------------Students with HIGHEST grade-----------------\n");
+        printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
         reset();
         // Find MAX grade
         for(int i=0; i<size; i++) {
-            if(grades[imax] <= grades[i]) {
-                imax = i;
+            if(grades[i_max] <= grades[i]) {
+                i_max = i;
             }
         }
         // Find students with MAX grade
         for (int i=0; i<size; i++) {
-            if (grades[imax] == grades[i]) {
-                printf("\t%-10d| %-10s| %10.2f\n", id[i], name[i], grades[i]);
+            if (grades[i_max] == grades[i]) {
+                printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
             }
         }
 
         cyan();
-        printf("\n----------Students with LOWEST grade----------\n");
-        printf("\t%-10s| %10s| %10s\n", "ID", "Name", "Grade");
+        printf("\n-----------------Students with LOWEST grade-----------------\n");
+        printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
         reset();
         // Find MIN grade
         for(int i=0; i<size; i++) {
-            if(grades[imin] >= grades[i]) {
-                imin = i;
+            if(grades[i_min] >= grades[i]) {
+                i_min = i;
             }
         }
         // Find students with MIN grade
         for (int i=0; i<size; i++) {
-            if (grades[imin] == grades[i]) {
-                printf("\t%-10d| %-10s| %10.2f\n", id[i], name[i], grades[i]);
+            if (grades[i_min] == grades[i]) {
+                printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
             }
         }
     } else {
@@ -224,9 +224,9 @@ void exportCsv() {
 
     FILE *fpt;
     fpt = fopen("GradeReport.csv", "w+");
-    fprintf(fpt, "ID, Grade\n");
+    fprintf(fpt, "ID, Name, Grade\n");
     for (int i = 0; i < size; i++) {
-      fprintf(fpt, "%d, %0.2f\n", id[i], grades[i]);
+      fprintf(fpt, "%d, %s, %0.2f\n", id[i], name[i], grades[i]);
     }
     fclose(fpt);
     green();
