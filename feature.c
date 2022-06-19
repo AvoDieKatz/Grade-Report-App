@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <regex.h>
 
 #include "variable.h"
 #include "feature.h"
@@ -11,7 +10,6 @@ int size = 0;
 int id[20];
 char name[20][31];
 float grades[20];
-char search_term[256];
 
 void displayStudents() {
 
@@ -70,7 +68,7 @@ void addStudent() {
         int validateVal = validateName(new_name);
         if(validateVal == 0)  {
             break;
-        } else if (validateVal == REG_NOMATCH) {
+        } else if (validateVal == 1) {
             red();
             printf("Invalid name, try again (Correct format is: FirstName LastName)");
             reset();
@@ -148,28 +146,21 @@ void findHighLow() {
 void searchById(int input) {
 
     int found = isIdDuplicated(input);
-    int count = 0;
     if (found == 1) {
         for (int i = 0; i < size; i++) {
             if (input == id[i]) {
-                printf("\t%-10d| %-10s| %10.2f\n", id[i], name[i],grades[i]);
-                count++;
+                printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
             }
         }
+        green();
+        printf("You found a match with ID: %d\n", input);
+        reset();
     } else if (found == 0) {
         red();
         printf("No match");
         reset();
         printf("with ID: %d\n", input);
         
-    }
-    if (count > 0) {
-        printf("You found");
-        green();
-        printf(" %d ", count);
-        reset();
-        printf("matches with ID:");
-        printf(" %d\n ", input);
     }
     return;
 
@@ -180,21 +171,21 @@ void searchByName(const char *input) {
     int count = 0;
     for (int i = 0; i < size; i++) {
         if (strcmp(input, name[i]) == 0) {
-            printf("\t%-10d| %-10s| %10.2f\n", id[i], name[i],grades[i]);
+            printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
             count++;
         }
     }
     if (count == 0) {
         red();
-        printf("No match");
+        printf("No match ");
         reset();
-        printf("with name: %s\n", input);
+        printf("with term: %s\n", input);
     } else if (count > 0) {
         printf("You found");
         green();
         printf(" %d ", count);
         reset();
-        printf("matches with name:");
+        printf("matches with term:");
         printf(" %s\n ", input);
     }
     return;
@@ -203,16 +194,17 @@ void searchByName(const char *input) {
 
 void search() {
 
+    char search_term[256];
     printf("Search: ");
     scanf("%[^\n]%*c", search_term);
     cyan();
-    printf("\t%-10s| %-10s| %5s\n", "ID", "Name", "Grade");
+    printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
     reset();
     int isInt = isInteger(search_term);
     if (isInt == 0) {
         int intInput = atoi(search_term);
         searchById(intInput);
-    } else if (isInt == REG_NOMATCH) {
+    } else if (isInt == 1) {
         searchByName(search_term);
     } else {
         printf("An error occurred while searching.");
