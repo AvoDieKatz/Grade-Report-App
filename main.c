@@ -8,6 +8,7 @@ int main() {
   int choice;
   int exit_flag = 0;
   int scf_rtn = 0; //value to check if "scanf" return correct type
+  char end_term; // value to check end line "\n"
 
   do {
     purple();
@@ -21,15 +22,16 @@ int main() {
     printf("0. Quit.\n\n");
     printf("Choose your option: ");
 
-    scf_rtn = scanf("%d", &choice);
-    emptyBuffer();
+    scf_rtn = scanf("%d%c", &choice, &end_term);
 
-    if (scf_rtn == 0) {
+    if (scf_rtn != 2 || end_term != '\n') {
       red();
       printf("Invalid choice. (Not a number)\n");
       reset();
+      emptyBuffer();
       continue;
-    } else if (choice < 0 || choice > 5) {
+    }
+    if (choice < 0 || choice > 5) {
       red();
       printf("Invalid choice. (Out of range)\n");
       reset();
@@ -66,7 +68,9 @@ int main() {
         break;
 
       default:
+        red();
         printf("Invalid choice, try again.\n");
+        reset();
         break;
     }
   } while (exit_flag != 1);

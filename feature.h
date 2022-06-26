@@ -1,4 +1,5 @@
 extern void displayStudents();
+extern void sort(const char *type);
 extern void addStudent();
 extern void findHighLow();
 extern void searchById(int input);

@@ -27,9 +27,9 @@ int isIdDuplicated(int input) {
 
 }
 
-int validateIdInput(int input, int scf_rtn) {
+int validateIdInput(int input, int scf_rtn, char end_term) {
 
-  if (scf_rtn == 0) {
+  if (scf_rtn != 2 || end_term != '\n') {
     red();
     printf("Invalid input. (Not a number)\n");
     reset();
@@ -39,19 +39,18 @@ int validateIdInput(int input, int scf_rtn) {
     red();
     printf("Invalid input. (Out of range)\n");
     reset();
-    emptyBuffer();
     return 0;
   } else {
-    emptyBuffer();
     return 1;
   }
   return -1;
 
 }
 
-int validateFloatInput(float input, int scf_rtn) {
 
-  if (scf_rtn == 0) {
+int validateGradeInput(float input, int scf_rtn, char end_term) {
+
+  if (scf_rtn != 2 || end_term != '\n') {
     red();
     printf("Not a valid grade (Number only)\n");
     reset();
@@ -61,37 +60,46 @@ int validateFloatInput(float input, int scf_rtn) {
     red();
     printf("Not a valid grade (Out of range)\n");
     reset();
-    emptyBuffer();
     return 0;
   } else {
-    emptyBuffer();
     return 1;
   }
   return -1;
 
 }
 
-int validateName(const char *input) {
+int validateName(const char *input, int scf_rtn) {
 
-    int value;
+  int value = 1;
+  if (scf_rtn != 0) {
     regex_t regex;
-    const char* pattern = "^[[:alpha:]]* [[:alpha:]]*$";
+    const char* pattern = "^[[:alpha:]]\\{1,\\} [[:alpha:]]\\{1,\\}$";
     value = regcomp(&regex, pattern, 0);
     value = regexec(&regex, input, 0, NULL, 0);
     regfree(&regex);
-    return value;
-
+    if (value == 1) {
+      red();
+      printf("Invalid name, try again (Correct format is: FirstName LastName)");
+      reset();
+    }
+  } else {
+    red();
+    printf("Invalid name, try again (Correct format is: FirstName LastName)");
+    reset();
+    emptyBuffer();
+  }
+  return value;
 }
 
 int isInteger(const char *input) {
 
-    int value;
-    regex_t regex;
-    const char* pattern = "^[[:digit:]]*$";
-    value = regcomp(&regex, pattern, 0);
-    value = regexec(&regex, input, 0, NULL, 0);
-    regfree(&regex);
-    return value;
+  int value;
+  regex_t regex;
+  const char* pattern = "^[[:digit:]]*$";
+  value = regcomp(&regex, pattern, 0);
+  value = regexec(&regex, input, 0, NULL, 0);
+  regfree(&regex);
+  return value;
     
 }
 

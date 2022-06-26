@@ -13,8 +13,14 @@ float grades[20];
 
 void displayStudents() {
 
-    if (size != 0) {
-        
+    if (size == 0) {
+
+        yellow();
+        printf("\n\n----------There are currently no student in the list----------\n\n");
+        reset();
+
+    } else {
+
         cyan();
         printf("\n------------------------Student list------------------------\n");
         printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
@@ -23,12 +29,98 @@ void displayStudents() {
           printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
         }
         printf("\n");
-    } else {
-        yellow();
-        printf("\n\n----------There are currently no student in the list----------\n\n");
-        reset();
+    
+        int back_flag = 0;
+        do {
+
+            printf("\n----------------------------------------------------\n");
+            printf("1. Sort Low to High Grades.\n");
+            printf("2. Sort High to Low Grades.\n");
+            printf("0. Back to Main Menu.\n\n");
+
+            char sub_choice[32];
+            scanf("%[^\n]%*c", sub_choice);
+            int validate = isInteger(sub_choice);
+            if (validate == 0) {
+                int opt = atoi(sub_choice);
+                switch(opt) {
+                    case 1:
+                        sort("asc");
+                        break;
+                    case 2: 
+                        sort("des");
+                        break;
+                    case 0:
+                        back_flag = 1;
+                        break;
+                    default:
+                        printf("Sorry, I don't understand that.");
+                        break;
+                }
+            } else if (validate == 1) {
+                printf("Sorry, I don't understand that.");
+            }
+
+        } while (back_flag != 1);
+        
     }
 
+}
+
+void sort(const char *type) {
+
+    int temp_grade;
+    int temp_id;
+    char temp_name[256];
+    if (strcmp(type, "asc") == 0) {
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (grades[j] > grades[j + 1]) {
+                    //swap grades
+                    temp_grade = grades[j];
+                    grades[j] = grades[j + 1];
+                    grades[j + 1] = temp_grade;
+                    //swap id
+                    temp_id = id[j];
+                    id[j] = id[j + 1];
+                    id[j + 1] = temp_id;
+                    //swap names
+                    strcpy(temp_name, name[j]);
+                    strcpy(name[j], name[j + 1]);
+                    strcpy(name[j + 1], temp_name);
+                }
+            }
+        }
+    } else if (strcmp(type, "des") == 0) {
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (grades[j] < grades[j + 1]) {
+                    //swap grades
+                    temp_grade = grades[j];
+                    grades[j] = grades[j + 1];
+                    grades[j + 1] = temp_grade;
+                    //swap id
+                    temp_id = id[j];
+                    id[j] = id[j + 1];
+                    id[j + 1] = temp_id;
+                    //swap names
+                    strcpy(temp_name, name[j]);
+                    strcpy(name[j], name[j + 1]);
+                    strcpy(name[j + 1], temp_name);
+                }
+            }
+        }
+    }
+
+    cyan();
+    printf("\n------------------------Student list------------------------\n");
+    printf("\t%-10s|%-10s %s %10s|%10s\n", "ID", "", "Name", "", "Grade");
+    reset();
+    for(int i = 0; i < size; i++) {
+      printf("\t%-10d|\t%-21s|%10.2f\n", id[i], name[i], grades[i]);
+    }
+    printf("\n");
+    
 }
 
 void addStudent() {
@@ -37,20 +129,20 @@ void addStudent() {
     char new_name[31] = "";
     float new_grade = 0.0;
     int scf_rtn = 0;
+    char end_term;
 
-    for (;;) {      //equivalent to while(true)
+    for (;;) {
         printf("\nInput student ID: \n");
-        scf_rtn = scanf("%d", &new_id);
-    
-        // Validate ID input
-        int validateInt = validateIdInput(new_id, scf_rtn);
-        if (validateInt == 0) {
+        scf_rtn = scanf("%d%c", &new_id, &end_term);
+        int validate = validateIdInput(new_id, scf_rtn, end_term);
+
+        if (validate == 0) {
             continue;
-        } else if (validateInt == -1) {
+        } else if (validate == -1) {
             printf("Something wrong when trying to add a new student.\n");
+            exit(0);
         }
 
-        // Check ID duplication
         int isDuplicate = isIdDuplicated(new_id);
         if (isDuplicate == 1) {
             red();
@@ -64,27 +156,24 @@ void addStudent() {
 
     for (;;) {
         printf("\nInput student's name: \n");
-        scanf("%[^\n]%*c", new_name);
-        int validateVal = validateName(new_name);
+        scf_rtn = scanf("%[^\n]%*c", new_name);
+        int validateVal = validateName(new_name, scf_rtn);
         if(validateVal == 0)  {
             break;
         } else if (validateVal == 1) {
-            red();
-            printf("Invalid name, try again (Correct format is: FirstName LastName)");
-            reset();
             continue;
         }
     }
 
     for (;;) {
         printf("\nInput student's mark: \n");
-        scf_rtn = scanf("%f", &new_grade);
-        // Validate grade input
-        int validateFl = validateFloatInput(new_grade, scf_rtn);
-        if (validateFl == 0) {
+        scf_rtn = scanf("%f%c", &new_grade, &end_term);
+        int validate = validateGradeInput(new_grade, scf_rtn, end_term);
+        if (validate == 0) {
             continue;
-        } else if (validateFl == -1) {
+        } else if (validate == -1) {
             printf("Something wrong when trying to add a new student.\n");
+            exit(0);
         }
         break;
     }
@@ -224,4 +313,5 @@ void exportCsv() {
     green();
     printf("\nA CSV file has been exported in the same directory\n");
     reset();
+
 }
